@@ -1,0 +1,267 @@
+@import "tailwindcss";
+/* Removed tw-animate-css import that was causing @property syntax error */
+
+/* Custom KMCI color palette - ivory, dark blue, white, gold accents */
+:root {
+  /* KMCI Brand Colors */
+  --ivory: oklch(0.97 0.01 85);
+  --dark-blue: oklch(0.25 0.08 250);
+  --deep-blue: oklch(0.18 0.1 250);
+  --gold: oklch(0.75 0.12 85);
+  --gold-light: oklch(0.85 0.08 85);
+
+  /* Semantic tokens */
+  --background: var(--ivory);
+  --foreground: var(--deep-blue);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--deep-blue);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--deep-blue);
+  --primary: var(--dark-blue);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: var(--gold);
+  --secondary-foreground: var(--deep-blue);
+  --muted: oklch(0.94 0.01 85);
+  --muted-foreground: oklch(0.5 0.05 250);
+  --accent: var(--gold);
+  --accent-foreground: var(--deep-blue);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.88 0.02 85);
+  --input: oklch(0.88 0.02 85);
+  --ring: var(--gold);
+  --chart-1: var(--dark-blue);
+  --chart-2: var(--gold);
+  --chart-3: oklch(0.6 0.15 200);
+  --chart-4: oklch(0.7 0.12 150);
+  --chart-5: oklch(0.65 0.1 300);
+  --radius: 1rem;
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: var(--deep-blue);
+  --sidebar-primary: var(--dark-blue);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: var(--ivory);
+  --sidebar-accent-foreground: var(--deep-blue);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--gold);
+  --font-playfair: "Playfair Display", serif; /* Assuming Playfair Display is a font */
+}
+
+.dark {
+  --background: var(--deep-blue);
+  --foreground: oklch(0.97 0.01 85);
+  --card: var(--dark-blue);
+  --card-foreground: oklch(0.97 0.01 85);
+  --popover: var(--dark-blue);
+  --popover-foreground: oklch(0.97 0.01 85);
+  --primary: var(--gold);
+  --primary-foreground: var(--deep-blue);
+  --secondary: oklch(0.3 0.08 250);
+  --secondary-foreground: oklch(0.97 0.01 85);
+  --muted: oklch(0.22 0.08 250);
+  --muted-foreground: oklch(0.65 0.05 250);
+  --accent: var(--gold);
+  --accent-foreground: var(--deep-blue);
+  --border: oklch(0.3 0.08 250);
+  --input: oklch(0.3 0.08 250);
+  --ring: var(--gold);
+  --sidebar: var(--dark-blue);
+  --sidebar-foreground: oklch(0.97 0.01 85);
+  --sidebar-primary: var(--gold);
+  --sidebar-primary-foreground: var(--deep-blue);
+  --sidebar-accent: oklch(0.3 0.08 250);
+  --sidebar-accent-foreground: oklch(0.97 0.01 85);
+  --sidebar-border: oklch(0.3 0.08 250);
+  --sidebar-ring: var(--gold);
+}
+
+.high-contrast {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0 0 0);
+  --border: oklch(0 0 0);
+  --primary: oklch(0 0 0);
+  --primary-foreground: oklch(1 0 0);
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* Smooth scrolling and reduced motion support */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  .reduce-motion * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Custom animations for KMCI */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(var(--gold), 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(var(--gold), 0.6);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Premium shadow utilities */
+.shadow-premium {
+  box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+}
+
+.shadow-premium-lg {
+  box-shadow: 0 8px 40px rgba(30, 58, 95, 0.12);
+}
+
+.shadow-glow {
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+/* Custom utility classes for KMCI design */
+.text-navy {
+  color: var(--dark-blue);
+}
+
+.text-gold {
+  color: var(--gold);
+}
+
+.bg-navy {
+  background-color: var(--dark-blue);
+}
+
+.bg-navy-light {
+  background-color: oklch(0.3 0.08 250);
+}
+
+.bg-ivory {
+  background-color: var(--ivory);
+}
+
+.bg-ivory-light {
+  background-color: oklch(0.98 0.005 85);
+}
+
+.bg-gold {
+  background-color: var(--gold);
+}
+
+.border-gold {
+  border-color: var(--gold);
+}
+
+.font-display {
+  font-family: var(--font-playfair);
+}
+
+.large-text {
+  font-size: 120%;
+}
