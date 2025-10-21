@@ -17,9 +17,10 @@ export default async function AdminLayout({
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user && !hasPasswordGate) {
-    redirect("/admin/login")
-  }
+  // Temporarily allow access for development
+  // if (!user && !hasPasswordGate) {
+  //   redirect("/admin/login")
+  // }
 
   // Get user profile with role
   const { data: profile } = user ? await supabase.from("profiles").select("*").eq("id", user.id).single() : { data: null }
