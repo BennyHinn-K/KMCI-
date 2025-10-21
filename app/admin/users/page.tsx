@@ -1,32 +1,25 @@
-import { getSupabaseServerClient } from "@/lib/supabase/server"
-import { UsersOverview } from "@/components/admin/users-overview"
-import { UsersTable } from "@/components/admin/users-table"
-import { InviteUserModal } from "@/components/admin/invite-user-modal"
-
-export default async function AdminUsersPage() {
-  const supabase = await getSupabaseServerClient()
-
-  // Fetch users data
-  const { data: profiles } = await supabase
-    .from("profiles")
-    .select("*")
-    .order("created_at", { ascending: false })
-
+export default function AdminUsersPage() {
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-display font-bold text-navy">Users</h1>
-          <p className="text-navy/60 mt-1">Manage admin users and their permissions</p>
-        </div>
-        <InviteUserModal />
+      <div>
+        <h1 className="text-3xl font-display font-bold text-navy">Users Management</h1>
+        <p className="text-navy/60 mt-1">Manage admin users and permissions</p>
       </div>
-
-      <UsersOverview profiles={profiles || []} />
-      <UsersTable profiles={profiles || []} />
+      <div className="bg-white p-6 rounded-lg shadow-sm border">
+        <h3 className="text-lg font-semibold text-navy mb-4">Users Management</h3>
+        <p className="text-navy/60 mb-4">Manage admin users and their permissions</p>
+        <div className="space-y-2">
+          <button className="w-full p-3 bg-ivory rounded-lg hover:bg-ivory-light transition-colors text-left">
+            View All Users
+          </button>
+          <button className="w-full p-3 bg-ivory rounded-lg hover:bg-ivory-light transition-colors text-left">
+            Invite New User
+          </button>
+          <button className="w-full p-3 bg-ivory rounded-lg hover:bg-ivory-light transition-colors text-left">
+            Manage Permissions
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
-
-
-
