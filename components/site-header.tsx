@@ -63,7 +63,7 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          {/* CTA Buttons (Admin hidden as requested) */}
+          {/* CTA Buttons */}
           <div className="hidden lg:flex items-center gap-3">
             <Button asChild variant="default" className="bg-primary hover:bg-primary/90">
               <Link href="/donate">Donate</Link>
