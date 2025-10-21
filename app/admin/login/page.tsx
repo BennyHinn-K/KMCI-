@@ -26,7 +26,13 @@ export default function AdminLoginPage() {
     setError("")
 
     try {
-      // Temporarily bypass authentication for development
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (error) throw error
+
       router.push("/admin")
       router.refresh()
     } catch (err: any) {
