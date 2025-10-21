@@ -65,6 +65,9 @@ export function SiteHeader() {
 
           {/* CTA Buttons */}
           <div className="hidden lg:flex items-center gap-3">
+            <Button asChild variant="outline" className="border-navy text-navy hover:bg-navy hover:text-white">
+              <Link href="/KMCI/admin">Admin</Link>
+            </Button>
             <Button asChild variant="default" className="bg-primary hover:bg-primary/90">
               <Link href="/donate">Donate</Link>
             </Button>
@@ -95,6 +98,9 @@ export function SiteHeader() {
                 </Link>
               ))}
               <div className="px-4 pt-2 flex flex-col gap-2">
+                <Button asChild variant="outline" className="w-full border-navy text-navy hover:bg-navy hover:text-white">
+                  <Link href="/KMCI/admin">Admin</Link>
+                </Button>
                 <Button asChild className="w-full bg-primary hover:bg-primary/90">
                   <Link href="/donate">Donate</Link>
                 </Button>
