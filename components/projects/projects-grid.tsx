@@ -22,7 +22,8 @@ export function ProjectsGrid() {
 
   useEffect(() => {
     async function fetchProjects() {
-      const { data, error } = await supabase
+      try {
+        const { data, error } = await supabase
         .from("projects")
         .select("*")
         .eq("status", "active")
@@ -30,8 +31,15 @@ export function ProjectsGrid() {
 
       if (!error && data) {
         setProjects(data)
+      } else {
+        setProjects([]) // Set empty array as fallback
       }
-      setLoading(false)
+      } catch (error) {
+        console.error("Error fetching projects:", error)
+        setProjects([]) // Set empty array as fallback
+      } finally {
+        setLoading(false)
+      }
     }
     fetchProjects()
   }, [])

@@ -38,7 +38,7 @@ export function AuditOverview({ auditLogs }: AuditOverviewProps) {
   }, {} as Record<string, number>)
 
   const topUsers = Object.entries(userActivity)
-    .sort(([,a], [,b]) => b - a)
+    .sort(([,a], [,b]) => (b as number) - (a as number))
     .slice(0, 3)
     .map(([userId, count]) => {
       const user = auditLogs.find(log => log.user_id === userId)?.profiles
@@ -100,7 +100,7 @@ export function AuditOverview({ auditLogs }: AuditOverviewProps) {
               <div className="text-2xl font-bold text-navy">{metric.value}</div>
               <p className={`text-xs ${
                 metric.changeType === 'positive' ? 'text-green-600' : 
-                metric.changeType === 'negative' ? 'text-red-600' : 'text-navy/60'
+                (metric.changeType as string) === 'negative' ? 'text-red-600' : 'text-navy/60'
               }`}>
                 {metric.change}
               </p>
@@ -119,14 +119,14 @@ export function AuditOverview({ auditLogs }: AuditOverviewProps) {
           <CardContent>
             <div className="space-y-3">
               {Object.entries(actionTypes)
-                .sort(([,a], [,b]) => b - a)
+                .sort(([,a], [,b]) => (b as number) - (a as number))
                 .slice(0, 5)
                 .map(([action, count]) => (
                   <div key={action} className="flex justify-between items-center">
                     <span className="text-sm text-navy capitalize">
                       {action.replace(/_/g, ' ')}
                     </span>
-                    <Badge variant="outline">{count}</Badge>
+                    <Badge variant="outline">{count as number}</Badge>
                   </div>
                 ))}
             </div>
@@ -151,7 +151,7 @@ export function AuditOverview({ auditLogs }: AuditOverviewProps) {
                       {user.email}
                     </div>
                   </div>
-                  <Badge variant="outline">{user.count} actions</Badge>
+                  <Badge variant="outline">{user.count as number} actions</Badge>
                 </div>
               ))}
             </div>

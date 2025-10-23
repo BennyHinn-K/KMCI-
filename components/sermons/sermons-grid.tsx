@@ -16,16 +16,24 @@ export function SermonsGrid() {
 
   useEffect(() => {
     async function fetchSermons() {
-      const { data, error } = await supabase
-        .from("sermons")
-        .select("*")
-        .eq("status", "published")
-        .order("sermon_date", { ascending: false })
+      try {
+        const { data, error } = await supabase
+          .from("sermons")
+          .select("*")
+          .eq("status", "published")
+          .order("sermon_date", { ascending: false })
 
-      if (!error && data) {
-        setSermons(data)
+        if (!error && data) {
+          setSermons(data)
+        } else {
+          setSermons([]) // Set empty array as fallback
+        }
+      } catch (error) {
+        console.error("Error fetching sermons:", error)
+        setSermons([]) // Set empty array as fallback
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     }
     fetchSermons()
   }, [])

@@ -105,7 +105,7 @@ export function DonationReports({ donations, projects }: DonationReportsProps) {
                   className="w-3 h-3 rounded-full" 
                   style={{ backgroundColor: item.color }}
                 />
-                <span className="text-sm text-navy/70">{item.name}: {item.value}</span>
+                <span className="text-sm text-navy/70">{item.name}: {item.value as string}</span>
               </div>
             ))}
           </div>

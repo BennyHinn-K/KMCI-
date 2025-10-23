@@ -16,16 +16,24 @@ export function EventsList() {
 
   useEffect(() => {
     async function fetchEvents() {
-      const { data, error } = await supabase
-        .from("events")
+      try {
+        const { data, error } = await supabase
+          .from("events")
         .select("*")
         .eq("status", "published")
         .order("event_date", { ascending: true })
 
       if (!error && data) {
         setEvents(data)
+      } else {
+        setEvents([]) // Set empty array as fallback
       }
-      setLoading(false)
+      } catch (error) {
+        console.error("Error fetching events:", error)
+        setEvents([]) // Set empty array as fallback
+      } finally {
+        setLoading(false)
+      }
     }
     fetchEvents()
   }, [])

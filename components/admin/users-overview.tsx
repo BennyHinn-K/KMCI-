@@ -88,7 +88,7 @@ export function UsersOverview({ profiles }: UsersOverviewProps) {
               <div className="text-2xl font-bold text-navy">{metric.value}</div>
               <p className={`text-xs ${
                 metric.changeType === 'positive' ? 'text-green-600' : 
-                metric.changeType === 'negative' ? 'text-red-600' : 'text-navy/60'
+                (metric.changeType as string) === 'negative' ? 'text-red-600' : 'text-navy/60'
               }`}>
                 {metric.change}
               </p>

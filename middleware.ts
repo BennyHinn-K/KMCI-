@@ -8,10 +8,15 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // Allow access to login page without authentication
+  if (request.nextUrl.pathname === "/admin/login") {
+    return NextResponse.next()
+  }
+
   // Update session with Supabase for admin routes
   const response = await updateSession(request)
 
-  // If unauthenticated, ensure redirect goes to /admin/login
+  // If unauthenticated, redirect to /admin/login
   const location = (response as NextResponse).headers.get("location")
   if (location && location.includes("/auth/login")) {
     const url = request.nextUrl.clone()
