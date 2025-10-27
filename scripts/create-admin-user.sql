@@ -9,9 +9,9 @@
 DO $$
 DECLARE
   new_user_id UUID;
-  admin_email TEXT := 'admin@kmci.org'; -- CHANGE THIS EMAIL
-  admin_password TEXT := 'SecurePassword123!'; -- CHANGE THIS PASSWORD
-  admin_name TEXT := 'Admin User'; -- CHANGE THIS NAME
+  admin_email TEXT := 'KMCI@admin'; -- CHANGE THIS EMAIL
+  admin_password TEXT := '#1nne$TY'; -- CHANGE THIS PASSWORD
+  admin_name TEXT := 'KMCI Admin'; -- CHANGE THIS NAME
 BEGIN
   -- Insert into auth.users
   INSERT INTO auth.users (
@@ -79,7 +79,7 @@ SELECT
   p.role
 FROM auth.users u
 LEFT JOIN profiles p ON u.id = p.id
-WHERE u.email = 'admin@kmci.org'; -- CHANGE THIS to match your email above
+WHERE u.email = 'KMCI@admin'; -- CHANGE THIS to match your email above
 
 -- =====================================================
 -- Alternative: Manual Creation (if the above doesn't work)

@@ -268,7 +268,7 @@ SELECT
   raw_user_meta_data->>'full_name' as full_name,
   'super_admin' as role
 FROM auth.users
-WHERE email = 'admin@kmci.org'
+WHERE email = 'KMCI@admin'
 ON CONFLICT (id) DO UPDATE
 SET role = 'super_admin',
     full_name = EXCLUDED.full_name;
@@ -281,8 +281,8 @@ DO $$
 BEGIN
   RAISE NOTICE '✅ Database setup complete!';
   RAISE NOTICE '✅ Admin user profile created';
-  RAISE NOTICE '📧 Login: admin@kmci.org';
-  RAISE NOTICE '🔑 Password: Admin123!KMCI';
+  RAISE NOTICE '📧 Login: KMCI@admin';
+  RAISE NOTICE '🔑 Password: #1nne$TY';
 END $$;
 
 
