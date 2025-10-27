@@ -1,25 +1,30 @@
-export default function AdminBlogPage() {
+import { getSupabaseServerClient } from "@/lib/supabase/server"
+import { BlogManager } from "@/components/admin/blog-manager"
+
+export default async function AdminBlogPage() {
+  const supabase = await getSupabaseServerClient()
+
+  const { data: posts } = await supabase
+    .from("blog_posts")
+    .select(`
+      *,
+      profiles:author_id (full_name, email)
+    `)
+    .order("created_at", { ascending: false })
+
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-display font-bold text-navy">Blog Posts Management</h1>
-        <p className="text-navy/60 mt-1">Create and manage blog content</p>
+        <h1 className="text-3xl font-bold tracking-tight">Blog Posts</h1>
+        <p className="text-muted-foreground">
+          Manage your blog posts and articles
+        </p>
       </div>
-      <div className="bg-white p-6 rounded-lg shadow-sm border">
-        <h3 className="text-lg font-semibold text-navy mb-4">Blog Management</h3>
-        <p className="text-navy/60 mb-4">Manage your blog posts and content</p>
-        <div className="space-y-2">
-          <button className="w-full p-3 bg-ivory rounded-lg hover:bg-ivory-light transition-colors text-left">
-            Create New Post
-          </button>
-          <button className="w-full p-3 bg-ivory rounded-lg hover:bg-ivory-light transition-colors text-left">
-            View All Posts
-          </button>
-          <button className="w-full p-3 bg-ivory rounded-lg hover:bg-ivory-light transition-colors text-left">
-            Manage Categories
-          </button>
-        </div>
-      </div>
+
+      <BlogManager posts={posts || []} />
     </div>
   )
 }
+
+
+

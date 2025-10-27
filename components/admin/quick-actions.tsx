@@ -1,40 +1,57 @@
+"use client"
+
 import Link from "next/link"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
+import { Plus, FileText, Mic2, Calendar, FolderKanban } from "lucide-react"
 
 export function QuickActions() {
   const actions = [
-    { title: "Manage Blog Posts", href: "/admin/blog", description: "Create and manage blog articles" },
-    { title: "Manage Events", href: "/admin/events", description: "Schedule and manage events" },
-    { title: "Manage Sermons", href: "/admin/sermons", description: "Upload and manage sermons" },
-    { title: "Manage Projects", href: "/admin/projects", description: "Start and manage projects" },
+    {
+      label: "New Blog Post",
+      href: "/admin/blog?action=new",
+      icon: FileText,
+      color: "bg-blue-500 hover:bg-blue-600",
+    },
+    {
+      label: "Add Sermon",
+      href: "/admin/sermons?action=new",
+      icon: Mic2,
+      color: "bg-purple-500 hover:bg-purple-600",
+    },
+    {
+      label: "Create Event",
+      href: "/admin/events?action=new",
+      icon: Calendar,
+      color: "bg-green-500 hover:bg-green-600",
+    },
+    {
+      label: "New Project",
+      href: "/admin/projects?action=new",
+      icon: FolderKanban,
+      color: "bg-orange-500 hover:bg-orange-600",
+    },
   ]
 
   return (
-    <Card className="shadow-premium">
-      <CardHeader>
-        <CardTitle className="text-navy">Quick Actions</CardTitle>
-        <CardDescription>Common tasks and shortcuts</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {actions.map((action) => (
-            <Link key={action.title} href={action.href}>
-              <Button
-                variant="outline"
-                className="w-full h-auto flex flex-col items-start p-4 hover:bg-navy/5 hover:border-gold transition-all bg-transparent"
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <Plus className="h-4 w-4 text-gold" />
-                  <span className="font-semibold text-navy">{action.title}</span>
-                </div>
-                <span className="text-xs text-navy/60 text-left">{action.description}</span>
-              </Button>
+    <div className="grid grid-cols-2 gap-4">
+      {actions.map((action) => {
+        const Icon = action.icon
+        return (
+          <Button
+            key={action.href}
+            asChild
+            className={`h-auto flex-col gap-2 py-6 ${action.color} text-white`}
+          >
+            <Link href={action.href}>
+              <Icon className="h-6 w-6" />
+              <span className="text-sm font-medium">{action.label}</span>
             </Link>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+          </Button>
+        )
+      })}
+    </div>
   )
 }
+
+
+

@@ -1,25 +1,41 @@
-export default function AdminDonationsPage() {
+import { getSupabaseServerClient } from "@/lib/supabase/server"
+import { DonationsManager } from "@/components/admin/donations-manager"
+import { DonationStats } from "@/components/admin/donation-stats"
+
+export default async function AdminDonationsPage() {
+  const supabase = await getSupabaseServerClient()
+
+  const { data: donations } = await supabase
+    .from("donations")
+    .select(`
+      *,
+      projects (title)
+    `)
+    .order("created_at", { ascending: false })
+
+  // Calculate stats
+  const totalDonations = donations?.reduce((sum, d) => sum + Number(d.amount), 0) || 0
+  const completedDonations = donations?.filter(d => d.status === "completed").length || 0
+
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-display font-bold text-navy">Donations Management</h1>
-        <p className="text-navy/60 mt-1">Track and manage donations</p>
+        <h1 className="text-3xl font-bold tracking-tight">Donations</h1>
+        <p className="text-muted-foreground">
+          Track and manage all donation transactions
+        </p>
       </div>
-      <div className="bg-white p-6 rounded-lg shadow-sm border">
-        <h3 className="text-lg font-semibold text-navy mb-4">Donations Management</h3>
-        <p className="text-navy/60 mb-4">Track and manage all donations</p>
-        <div className="space-y-2">
-          <button className="w-full p-3 bg-ivory rounded-lg hover:bg-ivory-light transition-colors text-left">
-            View All Donations
-          </button>
-          <button className="w-full p-3 bg-ivory rounded-lg hover:bg-ivory-light transition-colors text-left">
-            Generate Reports
-          </button>
-          <button className="w-full p-3 bg-ivory rounded-lg hover:bg-ivory-light transition-colors text-left">
-            Manage Payment Methods
-          </button>
-        </div>
-      </div>
+
+      <DonationStats 
+        total={totalDonations}
+        count={completedDonations}
+        donations={donations || []}
+      />
+
+      <DonationsManager donations={donations || []} />
     </div>
   )
 }
+
+
+

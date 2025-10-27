@@ -1,0 +1,56 @@
+﻿
+> kmci-website@1.0.0 build
+> next build
+
+   Γû▓ Next.js 15.2.4
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ Γ£ô Compiled successfully
+   Skipping validation of types
+   Skipping linting
+   Collecting page data ...
+   Generating static pages (0/26) ...
+   Generating static pages (6/26) 
+   Generating static pages (12/26) 
+   Generating static pages (19/26) 
+ Γ£ô Generating static pages (26/26)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+Γöî ╞Æ /                                    3.31 kB         118 kB
+Γö£ Γùï /_not-found                            981 B         102 kB
+Γö£ Γùï /about                               4.91 kB         116 kB
+Γö£ ╞Æ /admin                               3.89 kB         119 kB
+Γö£ ╞Æ /admin/audit                         1.87 kB         114 kB
+Γö£ ╞Æ /admin/blog                          2.27 kB         207 kB
+Γö£ ╞Æ /admin/donations                        2 kB         114 kB
+Γö£ ╞Æ /admin/events                        2.47 kB         209 kB
+Γö£ ╞Æ /admin/login                         4.16 kB         170 kB
+Γö£ ╞Æ /admin/messages                      5.92 kB         184 kB
+Γö£ ╞Æ /admin/projects                      3.98 kB         204 kB
+Γö£ ╞Æ /admin/sermons                       6.97 kB         191 kB
+Γö£ ╞Æ /admin/settings                      8.48 kB         174 kB
+Γö£ ╞Æ /admin/users                         4.88 kB         117 kB
+Γö£ Γùï /blog                                3.74 kB         168 kB
+Γö£ Γùï /contact                             4.74 kB         116 kB
+Γö£ Γùï /donate                              12.4 kB         124 kB
+Γö£ Γùï /events                              8.42 kB         181 kB
+Γö£ Γùï /manifest.webmanifest                  145 B         101 kB
+Γö£ Γùï /ministries                          2.92 kB         117 kB
+Γö£ Γùï /projects                             6.5 kB         170 kB
+Γö£ Γùï /robots.txt                            145 B         101 kB
+Γö£ Γùï /sermons                             7.41 kB         180 kB
+Γöö Γùï /sitemap.xml                           145 B         101 kB
++ First Load JS shared by all             101 kB
+  Γö£ chunks/1684-58c4de2d43f21f3e.js      45.3 kB
+  Γö£ chunks/4bd1b696-5287fb6231079c6a.js  53.2 kB
+  Γöö other shared chunks (total)             2 kB
+
+
+╞Æ Middleware                               77 kB
+
+Γùï  (Static)   prerendered as static content
+╞Æ  (Dynamic)  server-rendered on demand
+

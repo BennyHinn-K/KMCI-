@@ -1,178 +1,122 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState } from "react"
+import { getSupabaseBrowserClient } from "@/lib/supabase/client"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Settings, Save } from "lucide-react"
-import { useState } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { toast } from "sonner"
 
 interface GeneralSettingsProps {
-  settings: any[]
+  profile: any
 }
 
-export function GeneralSettings({ settings }: GeneralSettingsProps) {
-  const [loading, setLoading] = useState(false)
+export function GeneralSettings({ profile: initialProfile }: GeneralSettingsProps) {
+  const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
-    siteName: "Kingdom Missions Center International",
-    siteDescription: "A Christian missions organization dedicated to discipling communities and transforming lives for Christ's service.",
-    timezone: "Africa/Nairobi",
-    language: "en",
-    maintenanceMode: false,
-    allowRegistration: true,
-    requireEmailVerification: true,
-    maxFileSize: "10",
-    allowedFileTypes: "jpg,jpeg,png,gif,pdf,doc,docx"
+    full_name: initialProfile?.full_name || "",
+    email: initialProfile?.email || "",
+    avatar_url: initialProfile?.avatar_url || "",
   })
 
-  const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
-  }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
 
-  const handleSave = async () => {
-    setLoading(true)
     try {
-      // In a real app, this would save to the database
-      console.log('Saving general settings:', formData)
-      await new Promise(resolve => setTimeout(resolve, 1000))
-    } catch (error) {
-      console.error('Error saving settings:', error)
+      const supabase = getSupabaseBrowserClient()
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (!user) throw new Error("Not authenticated")
+
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          full_name: formData.full_name,
+          avatar_url: formData.avatar_url,
+        })
+        .eq("id", user.id)
+
+      if (error) throw error
+
+      toast.success("Profile updated successfully")
+      window.location.reload()
+    } catch (error: any) {
+      console.error("Update error:", error)
+      toast.error(error.message || "Failed to update profile")
     } finally {
-      setLoading(false)
+      setIsLoading(false)
     }
   }
 
+  const initials = formData.full_name
+    ? formData.full_name
+        .split(" ")
+        .map((n: string) => n[0])
+        .join("")
+        .toUpperCase()
+    : formData.email[0]?.toUpperCase() || "A"
+
   return (
-    <Card className="border-navy/10">
+    <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Settings className="h-5 w-5" />
-          General Settings
-        </CardTitle>
-        <p className="text-sm text-navy/60">Basic site configuration and preferences</p>
+        <CardTitle>Profile Information</CardTitle>
+        <CardDescription>
+          Update your personal information and profile picture
+        </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="siteName">Site Name</Label>
-          <Input
-            id="siteName"
-            value={formData.siteName}
-            onChange={(e) => handleInputChange('siteName', e.target.value)}
-            placeholder="Enter site name"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="siteDescription">Site Description</Label>
-          <Textarea
-            id="siteDescription"
-            value={formData.siteDescription}
-            onChange={(e) => handleInputChange('siteDescription', e.target.value)}
-            placeholder="Enter site description"
-            rows={3}
-          />
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="timezone">Timezone</Label>
-            <Select value={formData.timezone} onValueChange={(value) => handleInputChange('timezone', value)}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Africa/Nairobi">Africa/Nairobi</SelectItem>
-                <SelectItem value="Africa/Lagos">Africa/Lagos</SelectItem>
-                <SelectItem value="Africa/Cairo">Africa/Cairo</SelectItem>
-                <SelectItem value="UTC">UTC</SelectItem>
-              </SelectContent>
-            </Select>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="flex items-center gap-6">
+            <Avatar className="h-20 w-20">
+              <AvatarImage src={formData.avatar_url} />
+              <AvatarFallback className="text-2xl">{initials}</AvatarFallback>
+            </Avatar>
+            <div className="flex-1 space-y-2">
+              <Label htmlFor="avatar_url">Avatar URL</Label>
+              <Input
+                id="avatar_url"
+                value={formData.avatar_url}
+                onChange={(e) => setFormData({ ...formData, avatar_url: e.target.value })}
+                placeholder="https://..."
+              />
+            </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="language">Language</Label>
-            <Select value={formData.language} onValueChange={(value) => handleInputChange('language', value)}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="en">English</SelectItem>
-                <SelectItem value="sw">Swahili</SelectItem>
-                <SelectItem value="fr">French</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <Label htmlFor="maintenanceMode">Maintenance Mode</Label>
-              <p className="text-sm text-navy/60">Temporarily disable public access</p>
-            </div>
-            <Switch
-              id="maintenanceMode"
-              checked={formData.maintenanceMode}
-              onCheckedChange={(checked) => handleInputChange('maintenanceMode', checked)}
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <Label htmlFor="allowRegistration">Allow User Registration</Label>
-              <p className="text-sm text-navy/60">Enable public user registration</p>
-            </div>
-            <Switch
-              id="allowRegistration"
-              checked={formData.allowRegistration}
-              onCheckedChange={(checked) => handleInputChange('allowRegistration', checked)}
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <Label htmlFor="requireEmailVerification">Require Email Verification</Label>
-              <p className="text-sm text-navy/60">Users must verify email before access</p>
-            </div>
-            <Switch
-              id="requireEmailVerification"
-              checked={formData.requireEmailVerification}
-              onCheckedChange={(checked) => handleInputChange('requireEmailVerification', checked)}
-            />
-          </div>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="maxFileSize">Max File Size (MB)</Label>
+            <Label htmlFor="full_name">Full Name</Label>
             <Input
-              id="maxFileSize"
-              type="number"
-              value={formData.maxFileSize}
-              onChange={(e) => handleInputChange('maxFileSize', e.target.value)}
-              placeholder="10"
+              id="full_name"
+              value={formData.full_name}
+              onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+              required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="allowedFileTypes">Allowed File Types</Label>
+            <Label htmlFor="email">Email</Label>
             <Input
-              id="allowedFileTypes"
-              value={formData.allowedFileTypes}
-              onChange={(e) => handleInputChange('allowedFileTypes', e.target.value)}
-              placeholder="jpg,jpeg,png,gif,pdf"
+              id="email"
+              type="email"
+              value={formData.email}
+              disabled
+              className="bg-muted"
             />
+            <p className="text-xs text-muted-foreground">
+              Email cannot be changed from this page
+            </p>
           </div>
-        </div>
 
-        <Button onClick={handleSave} disabled={loading} className="w-full">
-          <Save className="h-4 w-4 mr-2" />
-          {loading ? "Saving..." : "Save Settings"}
-        </Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? "Saving..." : "Save Changes"}
+          </Button>
+        </form>
       </CardContent>
     </Card>
   )
 }
+
+
+

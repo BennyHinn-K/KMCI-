@@ -1,25 +1,31 @@
-export default function AdminAuditPage() {
+import { getSupabaseServerClient } from "@/lib/supabase/server"
+import { AuditLogTable } from "@/components/admin/audit-log-table"
+
+export default async function AdminAuditPage() {
+  const supabase = await getSupabaseServerClient()
+
+  const { data: logs } = await supabase
+    .from("audit_logs")
+    .select(`
+      *,
+      profiles:user_id (full_name, email)
+    `)
+    .order("created_at", { ascending: false })
+    .limit(100)
+
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-display font-bold text-navy">Audit Log</h1>
-        <p className="text-navy/60 mt-1">Track all admin actions and system changes</p>
+        <h1 className="text-3xl font-bold tracking-tight">Audit Log</h1>
+        <p className="text-muted-foreground">
+          Track all administrative actions and changes
+        </p>
       </div>
-      <div className="bg-white p-6 rounded-lg shadow-sm border">
-        <h3 className="text-lg font-semibold text-navy mb-4">Audit Log</h3>
-        <p className="text-navy/60 mb-4">View all admin actions and system changes</p>
-        <div className="space-y-2">
-          <button className="w-full p-3 bg-ivory rounded-lg hover:bg-ivory-light transition-colors text-left">
-            View All Logs
-          </button>
-          <button className="w-full p-3 bg-ivory rounded-lg hover:bg-ivory-light transition-colors text-left">
-            Filter by User
-          </button>
-          <button className="w-full p-3 bg-ivory rounded-lg hover:bg-ivory-light transition-colors text-left">
-            Export Logs
-          </button>
-        </div>
-      </div>
+
+      <AuditLogTable logs={logs || []} />
     </div>
   )
 }
+
+
+

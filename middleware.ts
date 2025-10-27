@@ -1,32 +1,19 @@
 import { updateSession } from "./lib/supabase/middleware"
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
+import { NextResponse, type NextRequest } from "next/server"
 
 export async function middleware(request: NextRequest) {
-  // Only protect admin routes; allow public pages without auth
-  if (!request.nextUrl.pathname.startsWith("/admin")) {
-    return NextResponse.next()
-  }
-
-  // Allow access to login page without authentication
-  if (request.nextUrl.pathname === "/admin/login") {
-    return NextResponse.next()
-  }
-
-  // Update session with Supabase for admin routes
-  const response = await updateSession(request)
-
-  // If unauthenticated, redirect to /admin/login
-  const location = (response as NextResponse).headers.get("location")
-  if (location && location.includes("/auth/login")) {
-    const url = request.nextUrl.clone()
-    url.pathname = "/admin/login"
-    return NextResponse.redirect(url)
-  }
-
-  return response
+  return await updateSession(request)
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public files (public directory)
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 }
