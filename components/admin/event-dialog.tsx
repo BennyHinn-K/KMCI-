@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { ImageUpload } from "@/components/ui/image-upload"
 import {
   Dialog,
   DialogContent,
@@ -204,12 +205,12 @@ export function EventDialog({ event, open, onOpenChange, onSave }: EventDialogPr
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="image">Image URL</Label>
-            <Input
-              id="image"
+            <Label htmlFor="image">Event Image</Label>
+            <ImageUpload
               value={formData.image_url}
-              onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-              placeholder="https://..."
+              onChange={(url) => setFormData({ ...formData, image_url: url })}
+              label=""
+              maxSize={5}
             />
           </div>
 
