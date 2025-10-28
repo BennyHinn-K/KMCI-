@@ -1,0 +1,7 @@
+# Ignore these files from Vercel deployment
+.env.local
+.env
+*.log
+node_modules
+.DS_Store
+
