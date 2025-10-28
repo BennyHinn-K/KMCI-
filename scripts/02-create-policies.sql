@@ -66,6 +66,19 @@ CREATE POLICY "Admins can manage projects"
     SELECT id FROM profiles WHERE role IN ('super_admin', 'editor')
   ));
 
+-- Products policies
+CREATE POLICY "Products are viewable by everyone"
+  ON products FOR SELECT
+  USING (status = 'active' OR auth.uid() IN (
+    SELECT id FROM profiles WHERE role IN ('super_admin', 'editor')
+  ));
+
+CREATE POLICY "Admins can manage products"
+  ON products FOR ALL
+  USING (auth.uid() IN (
+    SELECT id FROM profiles WHERE role IN ('super_admin', 'editor')
+  ));
+
 -- Donations policies
 CREATE POLICY "Anyone can create donation"
   ON donations FOR INSERT

@@ -54,6 +54,11 @@ const navItems: NavItem[] = [
     icon: FolderKanban,
   },
   {
+    title: "Products",
+    href: "/admin/products",
+    icon: FolderKanban,
+  },
+  {
     title: "Donations",
     href: "/admin/donations",
     icon: DollarSign,

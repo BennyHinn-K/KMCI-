@@ -168,6 +168,27 @@ CREATE TABLE IF NOT EXISTS newsletter_subscribers (
   unsubscribed_at TIMESTAMPTZ
 );
 
+-- Products table
+CREATE TABLE IF NOT EXISTS products (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  title TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  description TEXT,
+  full_content TEXT,
+  price DECIMAL(12, 2) NOT NULL DEFAULT 0,
+  currency TEXT DEFAULT 'KES',
+  sku TEXT UNIQUE,
+  image_url TEXT,
+  gallery_urls TEXT[],
+  category TEXT,
+  status TEXT DEFAULT 'active' CHECK (status IN ('active', 'draft', 'archived', 'out_of_stock')),
+  stock INTEGER DEFAULT 0,
+  is_featured BOOLEAN DEFAULT false,
+  created_by UUID REFERENCES profiles(id),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Site settings table
 CREATE TABLE IF NOT EXISTS site_settings (
   key TEXT PRIMARY KEY,
@@ -213,3 +234,4 @@ ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE newsletter_subscribers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE audit_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE products ENABLE ROW LEVEL SECURITY;

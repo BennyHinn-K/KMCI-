@@ -174,6 +174,27 @@ CREATE TABLE IF NOT EXISTS newsletter_subscribers (
   unsubscribed_at TIMESTAMPTZ
 );
 
+-- Products table
+CREATE TABLE IF NOT EXISTS products (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  title TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  description TEXT,
+  full_content TEXT,
+  price DECIMAL(12, 2) NOT NULL DEFAULT 0,
+  currency TEXT DEFAULT 'KES',
+  sku TEXT UNIQUE,
+  image_url TEXT,
+  gallery_urls TEXT[],
+  category TEXT,
+  status TEXT DEFAULT 'active' CHECK (status IN ('active', 'draft', 'archived', 'out_of_stock')),
+  stock INTEGER DEFAULT 0,
+  is_featured BOOLEAN DEFAULT false,
+  created_by UUID REFERENCES profiles(id),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Site settings table
 CREATE TABLE IF NOT EXISTS site_settings (
   key TEXT PRIMARY KEY,
@@ -208,6 +229,7 @@ CREATE INDEX IF NOT EXISTS idx_blog_posts_published ON blog_posts(is_published, 
 CREATE INDEX IF NOT EXISTS idx_donations_status ON donations(status);
 CREATE INDEX IF NOT EXISTS idx_donations_project ON donations(project_id);
 CREATE INDEX IF NOT EXISTS idx_audit_logs_user ON audit_logs(user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
 
 -- =====================================================
 -- ROW LEVEL SECURITY (RLS)
@@ -225,6 +247,7 @@ ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE newsletter_subscribers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE audit_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 
 -- =====================================================
 -- RLS POLICIES
@@ -236,6 +259,7 @@ CREATE POLICY IF NOT EXISTS "Public can view active ministries" ON ministries FO
 CREATE POLICY IF NOT EXISTS "Public can view sermons" ON sermons FOR SELECT USING (true);
 CREATE POLICY IF NOT EXISTS "Public can view events" ON events FOR SELECT USING (true);
 CREATE POLICY IF NOT EXISTS "Public can view projects" ON projects FOR SELECT USING (true);
+CREATE POLICY IF NOT EXISTS "Public can view products" ON products FOR SELECT USING (status = 'active');
 
 -- Authenticated users can do more
 CREATE POLICY IF NOT EXISTS "Authenticated users can manage all" ON blog_posts FOR ALL USING (auth.role() = 'authenticated');
@@ -243,6 +267,7 @@ CREATE POLICY IF NOT EXISTS "Authenticated users can manage events" ON events FO
 CREATE POLICY IF NOT EXISTS "Authenticated users can manage sermons" ON sermons FOR ALL USING (auth.role() = 'authenticated');
 CREATE POLICY IF NOT EXISTS "Authenticated users can manage projects" ON projects FOR ALL USING (auth.role() = 'authenticated');
 CREATE POLICY IF NOT EXISTS "Authenticated users can manage ministries" ON ministries FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY IF NOT EXISTS "Authenticated users can manage products" ON products FOR ALL USING (auth.role() = 'authenticated');
 CREATE POLICY IF NOT EXISTS "Authenticated users can view donations" ON donations FOR SELECT USING (auth.role() = 'authenticated');
 CREATE POLICY IF NOT EXISTS "Authenticated users can view messages" ON contact_messages FOR SELECT USING (auth.role() = 'authenticated');
 CREATE POLICY IF NOT EXISTS "Authenticated users can manage messages" ON contact_messages FOR ALL USING (auth.role() = 'authenticated');
