@@ -195,10 +195,19 @@ export function ProductDialog({ product, open, onOpenChange, onSave }: ProductDi
         toast.success("Product updated successfully")
       } else {
         console.log("🔵 [Product Save] Creating new product")
+        console.log("🔵 [Product Save] Full payload:", JSON.stringify(payload, null, 2))
+        
         const { data, error } = await supabase
           .from("products")
-          .insert(payload)
+          .insert([payload])
           .select()
+
+        console.log("🔵 [Product Save] Insert response:", { 
+          hasData: !!data, 
+          dataCount: data?.length,
+          hasError: !!error,
+          errorCode: error?.code 
+        })
 
         if (error) {
           console.error("❌ [Product Save] Insert error:", {
@@ -206,24 +215,34 @@ export function ProductDialog({ product, open, onOpenChange, onSave }: ProductDi
             message: error.message,
             details: error.details,
             hint: error.hint,
-            fullError: error
+            fullError: JSON.stringify(error, null, 2)
           })
           
           // Provide specific error messages based on error codes
           let errorMessage = `Failed to create product: ${error.message}`
           if (error.code === '42501') {
-            errorMessage = "Permission denied. Check RLS policies and ensure user has admin/editor role."
+            errorMessage = "Permission denied. RLS policy blocking insert. Ensure user has admin/editor role in profiles table."
           } else if (error.code === '23505') {
             errorMessage = `Duplicate entry. ${error.details || 'Slug or SKU may already exist.'}`
           } else if (error.code === '23503') {
             errorMessage = "Invalid reference. User profile may not exist."
           } else if (error.code === '23502') {
             errorMessage = "Required field missing. Please fill all required fields."
+          } else if (error.code === 'PGRST116') {
+            errorMessage = "No rows returned. Insert may have failed silently."
           }
           
+          toast.error(errorMessage)
           throw new Error(`${errorMessage} (Code: ${error.code})`)
         }
-        console.log("✅ [Product Save] Product created successfully:", data?.[0]?.id)
+        
+        if (!data || data.length === 0) {
+          console.error("❌ [Product Save] No data returned from insert")
+          toast.error("Product created but no confirmation received. Please refresh and check.")
+          throw new Error("Insert succeeded but no data returned")
+        }
+        
+        console.log("✅ [Product Save] Product created successfully:", data[0]?.id)
         toast.success("Product created successfully")
       }
 

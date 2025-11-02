@@ -58,9 +58,12 @@ CREATE POLICY "Public can view active products"
   );
 
 -- Step 7: Create proper INSERT policy: Only admins/editors can insert
+-- CRITICAL: Must use WITH CHECK, not USING for INSERT
+DROP POLICY IF EXISTS "Admins and editors can insert products" ON products;
 CREATE POLICY "Admins and editors can insert products"
   ON products FOR INSERT
   WITH CHECK (
+    auth.uid() IS NOT NULL AND
     auth.uid() IN (
       SELECT id FROM profiles WHERE role IN ('super_admin', 'editor')
     )
