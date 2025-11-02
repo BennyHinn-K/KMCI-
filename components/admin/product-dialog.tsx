@@ -95,7 +95,13 @@ export function ProductDialog({ product, open, onOpenChange, onSave }: ProductDi
 
     try {
       console.log("🔵 [Product Save] Starting save process...")
+      
+      // Check Supabase client initialization
       const supabase = getSupabaseBrowserClient()
+      if (!supabase) {
+        console.error("❌ [Product Save] Supabase client not initialized")
+        throw new Error("Database connection failed. Please refresh the page.")
+      }
       
       // Step 1: Check authentication
       const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -133,9 +139,28 @@ export function ProductDialog({ product, open, onOpenChange, onSave }: ProductDi
         throw new Error(`Insufficient permissions. Required: super_admin or editor. Current: ${profile.role}`)
       }
 
-      // Step 3: Prepare payload
+      // Step 3: Validate required fields and prepare payload
+      if (!formData.title || formData.title.trim() === "") {
+        console.error("❌ [Product Save] Title is required")
+        throw new Error("Title is required")
+      }
+
+      // Ensure slug is generated if missing and make it unique with timestamp if needed
+      let finalSlug = formData.slug || generateSlug(formData.title)
+      if (!finalSlug || finalSlug.trim() === "") {
+        console.error("❌ [Product Save] Cannot generate slug from title")
+        throw new Error("Invalid title - cannot generate slug")
+      }
+      
+      // Ensure slug is unique by appending timestamp if product is new
+      if (!product && finalSlug) {
+        finalSlug = `${finalSlug}-${Date.now()}`
+      }
+
       const payload = {
         ...formData,
+        slug: finalSlug,
+        title: formData.title.trim(),
         price: parseFloat(formData.price) || 0,
         stock: parseInt(formData.stock) || 0,
         created_by: user.id,
@@ -143,9 +168,9 @@ export function ProductDialog({ product, open, onOpenChange, onSave }: ProductDi
 
       console.log("🔵 [Product Save] Payload prepared:", { 
         title: payload.title,
+        slug: payload.slug,
         price: payload.price,
-        status: payload.status,
-        hasSlug: !!payload.slug 
+        status: payload.status
       })
 
       // Step 4: Save product
@@ -183,7 +208,20 @@ export function ProductDialog({ product, open, onOpenChange, onSave }: ProductDi
             hint: error.hint,
             fullError: error
           })
-          throw new Error(`Failed to create product: ${error.message} (Code: ${error.code}). Check RLS policies if code is 42501.`)
+          
+          // Provide specific error messages based on error codes
+          let errorMessage = `Failed to create product: ${error.message}`
+          if (error.code === '42501') {
+            errorMessage = "Permission denied. Check RLS policies and ensure user has admin/editor role."
+          } else if (error.code === '23505') {
+            errorMessage = `Duplicate entry. ${error.details || 'Slug or SKU may already exist.'}`
+          } else if (error.code === '23503') {
+            errorMessage = "Invalid reference. User profile may not exist."
+          } else if (error.code === '23502') {
+            errorMessage = "Required field missing. Please fill all required fields."
+          }
+          
+          throw new Error(`${errorMessage} (Code: ${error.code})`)
         }
         console.log("✅ [Product Save] Product created successfully:", data?.[0]?.id)
         toast.success("Product created successfully")
@@ -219,12 +257,17 @@ export function ProductDialog({ product, open, onOpenChange, onSave }: ProductDi
             <Input
               id="title"
               value={formData.title}
-              onChange={(e) => setFormData({ 
-                ...formData, 
-                title: e.target.value,
-                slug: generateSlug(e.target.value)
-              })}
+              onChange={(e) => {
+                const newTitle = e.target.value
+                const newSlug = newTitle ? generateSlug(newTitle) : ""
+                setFormData({ 
+                  ...formData, 
+                  title: newTitle,
+                  slug: newSlug
+                })
+              }}
               required
+              placeholder="Enter product title"
             />
           </div>
 
