@@ -94,11 +94,46 @@ export function ProductDialog({ product, open, onOpenChange, onSave }: ProductDi
     setIsLoading(true)
 
     try {
+      console.log("🔵 [Product Save] Starting save process...")
       const supabase = getSupabaseBrowserClient()
-      const { data: { user } } = await supabase.auth.getUser()
+      
+      // Step 1: Check authentication
+      const { data: { user }, error: authError } = await supabase.auth.getUser()
+      console.log("🔵 [Product Save] Auth check:", { 
+        authenticated: !!user, 
+        userId: user?.id,
+        authError: authError?.message 
+      })
 
-      if (!user) throw new Error("Not authenticated")
+      if (!user) {
+        console.error("❌ [Product Save] Not authenticated")
+        throw new Error("Not authenticated. Please log in again.")
+      }
 
+      // Step 2: Verify user role
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("role, full_name")
+        .eq("id", user.id)
+        .single()
+
+      console.log("🔵 [Product Save] Profile check:", { 
+        hasProfile: !!profile,
+        role: profile?.role,
+        profileError: profileError?.message 
+      })
+
+      if (!profile) {
+        console.error("❌ [Product Save] No profile found for user")
+        throw new Error("User profile not found. Please contact administrator.")
+      }
+
+      if (!["super_admin", "editor"].includes(profile.role)) {
+        console.error("❌ [Product Save] Insufficient permissions:", profile.role)
+        throw new Error(`Insufficient permissions. Required: super_admin or editor. Current: ${profile.role}`)
+      }
+
+      // Step 3: Prepare payload
       const payload = {
         ...formData,
         price: parseFloat(formData.price) || 0,
@@ -106,27 +141,65 @@ export function ProductDialog({ product, open, onOpenChange, onSave }: ProductDi
         created_by: user.id,
       }
 
+      console.log("🔵 [Product Save] Payload prepared:", { 
+        title: payload.title,
+        price: payload.price,
+        status: payload.status,
+        hasSlug: !!payload.slug 
+      })
+
+      // Step 4: Save product
       if (product) {
-        const { error } = await supabase
+        console.log("🔵 [Product Save] Updating existing product:", product.id)
+        const { data, error } = await supabase
           .from("products")
           .update(payload)
           .eq("id", product.id)
+          .select()
 
-        if (error) throw error
+        if (error) {
+          console.error("❌ [Product Save] Update error:", {
+            code: error.code,
+            message: error.message,
+            details: error.details,
+            hint: error.hint
+          })
+          throw new Error(`Failed to update product: ${error.message} (Code: ${error.code})`)
+        }
+        console.log("✅ [Product Save] Product updated successfully:", data?.[0]?.id)
         toast.success("Product updated successfully")
       } else {
-        const { error } = await supabase.from("products").insert(payload)
+        console.log("🔵 [Product Save] Creating new product")
+        const { data, error } = await supabase
+          .from("products")
+          .insert(payload)
+          .select()
 
-        if (error) throw error
+        if (error) {
+          console.error("❌ [Product Save] Insert error:", {
+            code: error.code,
+            message: error.message,
+            details: error.details,
+            hint: error.hint,
+            fullError: error
+          })
+          throw new Error(`Failed to create product: ${error.message} (Code: ${error.code}). Check RLS policies if code is 42501.`)
+        }
+        console.log("✅ [Product Save] Product created successfully:", data?.[0]?.id)
         toast.success("Product created successfully")
       }
 
       onSave()
     } catch (error: any) {
-      console.error("Save error:", error)
-      toast.error(error.message || "Failed to save product")
+      console.error("❌ [Product Save] Fatal error:", {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      })
+      toast.error(error.message || "Failed to save product. Check browser console for details.")
     } finally {
       setIsLoading(false)
+      console.log("🔵 [Product Save] Save process completed")
     }
   }
 
