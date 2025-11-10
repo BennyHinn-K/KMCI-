@@ -6,6 +6,10 @@ export async function updateSession(request: NextRequest) {
     request,
   })
 
+  // Allow admin access with passkey cookie bypass
+  const cookieBypassName = process.env.AUTH_COOKIE_NAME || "kmci_admin"
+  const hasAdminBypass = request.cookies.get(cookieBypassName)?.value === "1"
+
   // With Fluid compute, don't put this client in a global environment
   // variable. Always create a new one on each request.
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
@@ -44,7 +48,8 @@ export async function updateSession(request: NextRequest) {
   if (
     request.nextUrl.pathname.startsWith("/admin") &&
     request.nextUrl.pathname !== "/admin/login" &&
-    !user
+    !user &&
+    !hasAdminBypass
   ) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone()

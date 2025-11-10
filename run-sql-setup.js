@@ -6,7 +6,7 @@ const SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzd
 
 async function runSQL(sql) {
   return new Promise((resolve, reject) => {
-    const data = JSON.stringify({ query: sql })
+    const data = JSON.stringify({ sql_query: sql })
     
     const options = {
       hostname: 'rxtiwgfwxqvzscqbgnqk.supabase.co',

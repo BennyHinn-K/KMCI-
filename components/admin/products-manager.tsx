@@ -14,6 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Plus, Search, Edit, Trash2 } from "lucide-react"
 import { ProductDialog } from "./product-dialog"
+import { getSupabaseBrowserClient } from "@/lib/supabase/client"
 
 interface ProductsManagerProps {
   products: any[]
@@ -24,6 +25,17 @@ export function ProductsManager({ products: initialProducts }: ProductsManagerPr
   const [searchTerm, setSearchTerm] = useState("")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState<any>(null)
+
+  const deleteProduct = async (id: string) => {
+    const supabase = getSupabaseBrowserClient()
+    const { error } = await supabase.from("products").delete().eq("id", id)
+    if (!error) {
+      setProducts((prev) => prev.filter((p) => p.id !== id))
+    } else {
+      // noop: UI toasts handled in dialog elsewhere, keep simple here
+      console.error("Failed to delete product", error.message)
+    }
+  }
 
   const filteredProducts = products.filter((product) =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -103,7 +115,7 @@ export function ProductsManager({ products: initialProducts }: ProductsManagerPr
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon">
+                      <Button variant="ghost" size="icon" onClick={() => deleteProduct(product.id)}>
                         <Trash2 className="h-4 w-4 text-destructive" />
                       </Button>
                     </div>

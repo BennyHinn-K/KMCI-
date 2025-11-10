@@ -18,7 +18,7 @@ if (!SUPABASE_SERVICE_KEY) {
 function runSQL(sql) {
   return new Promise((resolve, reject) => {
     const url = new URL(SUPABASE_URL)
-    const data = JSON.stringify({ query: sql })
+    const data = JSON.stringify({ sql_query: sql })
     
     const options = {
       hostname: url.hostname,

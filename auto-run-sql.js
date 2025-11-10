@@ -5,7 +5,7 @@ const SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzd
 
 function executeSQL(sql) {
   return new Promise((resolve, reject) => {
-    const data = JSON.stringify({ query: sql });
+    const data = JSON.stringify({ sql_query: sql });
     
     const options = {
       hostname: 'rxtiwgfwxqvzscqbgnqk.supabase.co',
@@ -24,7 +24,14 @@ function executeSQL(sql) {
     const req = https.request(options, (res) => {
       let body = '';
       res.on('data', (chunk) => body += chunk);
-      res.on('end', () => resolve(JSON.parse(body)));
+      res.on('end', () => {
+        try {
+          const parsed = JSON.parse(body);
+          resolve(parsed);
+        } catch (_) {
+          resolve(body);
+        }
+      });
     });
 
     req.on('error', reject);

@@ -17,6 +17,7 @@ export default function AdminLoginPage() {
   
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [passkey, setPasskey] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -52,6 +53,29 @@ export default function AdminLoginPage() {
     } catch (error: any) {
       console.error("Login error:", error)
       toast.error(error.message || "Invalid email or password")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handlePasskey = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+    try {
+      const r = await fetch("/admin/passkey", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ passkey }),
+      })
+      if (!r.ok) {
+        const j = await r.json().catch(() => ({}))
+        throw new Error(j.error || "Invalid passkey")
+      }
+      toast.success("Admin access granted")
+      router.push(redirect)
+      router.refresh()
+    } catch (err: any) {
+      toast.error(err.message || "Passkey login failed")
     } finally {
       setIsLoading(false)
     }
@@ -114,6 +138,30 @@ export default function AdminLoginPage() {
 
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Signing in..." : "Sign In"}
+            </Button>
+          </form>
+
+          <div className="my-6 text-center text-muted-foreground text-xs">OR</div>
+
+          <form onSubmit={handlePasskey} className="space-y-3">
+            <div className="space-y-2">
+              <Label htmlFor="passkey">Admin Passkey</Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="passkey"
+                  type="password"
+                  value={passkey}
+                  onChange={(e) => setPasskey(e.target.value)}
+                  className="pl-10"
+                  placeholder="Enter admin passkey"
+                  disabled={isLoading}
+                  required
+                />
+              </div>
+            </div>
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Verifying..." : "Sign In with Passkey"}
             </Button>
           </form>
 
