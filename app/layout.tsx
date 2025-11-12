@@ -4,6 +4,7 @@ import { Playfair_Display, Inter } from "next/font/google"
 import { Suspense } from "react"
 import "./globals.css"
 import { AccessibilityControls } from "@/components/accessibility-controls"
+import { Toaster as SonnerToaster } from "@/components/ui/sonner"
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -58,6 +59,7 @@ export default function RootLayout({
         <Suspense fallback={null}>{children}</Suspense>
         <AccessibilityControls />
         {/* Analytics component removed due to import errors */}
+        <SonnerToaster position="top-right" richColors closeButton />
       </body>
     </html>
   )
