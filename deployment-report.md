@@ -1,8 +1,8 @@
 
 # 🚀 KMCI Website Deployment Report
 
-**Deployment Date:** 01/12/2025, 23:39:54
-**Duration:** 149.50 seconds
+**Deployment Date:** 01/12/2025, 23:49:54
+**Duration:** 424.26 seconds
 **Status:** ❌ FAILED
 
 ## Deployment Steps
@@ -17,7 +17,37 @@
 - 📋 Installing dependencies...
 - ✅ Installing dependencies completed
 - 📋 Type checking...
-- ❌ Type checking failed: Command failed: npm run type-check
+- ✅ Type checking completed
+- 📋 Building project...
+- ✅ Building project completed
+- ✅ Project build completed successfully
+- 📋 Preparing deployment commit
+- 📋 Staging files...
+- ✅ Staging files completed
+- 📋 Creating deployment commit...
+- ✅ Creating deployment commit completed
+- 📋 Pushing to repository...
+- ✅ Pushing to repository completed
+- ✅ Code pushed to repository
+- 📋 Initiating Vercel deployment
+- 📋 Vercel CLI check...
+- ✅ Vercel CLI check completed
+- 📋 Deploying to Vercel...
+- ❌ Deploying to Vercel failed: Command failed: vercel --prod --yes
+Vercel CLI 48.2.9
+Retrieving project…
+Deploying bennyhinns-projects-612c30e3/kmci-website
+Uploading [--------------------] (0.0B/310.8KB)
+Uploading [=====---------------] (85.5KB/310.8KB)
+Uploading [==========----------] (170.6KB/310.8KB)
+Uploading [===============-----] (234.6KB/310.8KB)
+Uploading [====================] (310.8KB/310.8KB)
+Inspect: https://vercel.com/bennyhinns-projects-612c30e3/kmci-website/DgVTCFctiB5fCELkLbFeZno9JEdm [12s]
+Production: https://kmci-website-p14f8l54l-bennyhinns-projects-612c30e3.vercel.app [12s]
+Building
+
+- 📋 Vercel CLI not available, using Git-based deployment
+- 📋 Vercel will auto-deploy from the main branch
 
 ## Environment
 - **Node.js Version:** v22.18.0
@@ -32,8 +62,20 @@
 
 
 ## Errors Encountered
-- **Command:** npm run type-check
-  **Error:** Command failed: npm run type-check
+- **Command:** vercel --prod --yes
+  **Error:** Command failed: vercel --prod --yes
+Vercel CLI 48.2.9
+Retrieving project…
+Deploying bennyhinns-projects-612c30e3/kmci-website
+Uploading [--------------------] (0.0B/310.8KB)
+Uploading [=====---------------] (85.5KB/310.8KB)
+Uploading [==========----------] (170.6KB/310.8KB)
+Uploading [===============-----] (234.6KB/310.8KB)
+Uploading [====================] (310.8KB/310.8KB)
+Inspect: https://vercel.com/bennyhinns-projects-612c30e3/kmci-website/DgVTCFctiB5fCELkLbFeZno9JEdm [12s]
+Production: https://kmci-website-p14f8l54l-bennyhinns-projects-612c30e3.vercel.app [12s]
+Building
+
 
 
 ## Next Steps
