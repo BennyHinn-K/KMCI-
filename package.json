@@ -10,8 +10,13 @@
     "type-check": "tsc --noEmit",
     "setup": "node setup-all.js",
     "fix-products": "node run-fix-products.js",
-    "deploy": "git add . && git commit -m 'Auto-deploy' && git push origin main",
-    "deploy:vercel": "vercel --prod"
+    "deploy": "node auto-deploy.js",
+    "deploy:manual": "git add . && git commit -m 'Manual deploy' && git push origin main",
+    "deploy:vercel": "vercel --prod",
+    "fix:database": "echo 'Run COMPLETE_DATABASE_FIX.sql in Supabase SQL Editor'",
+    "prebuild": "npm run type-check",
+    "postbuild": "echo 'Build completed successfully!'",
+    "verify": "npm run lint && npm run type-check && npm run build"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

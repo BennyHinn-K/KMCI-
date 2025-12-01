@@ -34,7 +34,7 @@ function execSQL(sql) {
       res.on('data', chunk => body += chunk)
       res.on('end', () => {
         if (res.statusCode >= 200 && res.statusCode < 300) {
-          try { resolve(JSON.parse(body)) } catch { resolve(body) }
+          try { resolve(JSON.parse(body)) } catch { resolve(body || 'OK') }
         } else {
           reject(new Error(`HTTP ${res.statusCode}: ${body}`))
         }
@@ -55,7 +55,12 @@ async function main() {
   }
   const sql = fs.readFileSync(file, 'utf8')
   console.log(`📝 Executing ${file} ...`)
-  await execSQL(sql)
+  const result = await execSQL(sql)
+  if (Array.isArray(result)) {
+    console.table(result)
+  } else {
+    console.log(result)
+  }
   console.log('✅ Done')
 }
 
