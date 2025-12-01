@@ -1,43 +1,45 @@
-import { notFound } from "next/navigation"
-import { SiteHeader } from "@/components/site-header"
-import { SiteFooter } from "@/components/site-footer"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { ArrowLeft, Calendar, User, Share2 } from "lucide-react"
-import Link from "next/link"
-import { getSupabaseServerClient } from "@/lib/supabase/server"
+import { notFound } from "next/navigation";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Calendar, User, Share2 } from "lucide-react";
+import Link from "next/link";
+import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 interface BlogPostPageProps {
-  params: {
-    slug: string
-  }
+  params: Promise<{
+    slug: string;
+  }>;
 }
 
 async function getBlogPost(slug: string) {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await getSupabaseServerClient();
 
   const { data: post, error } = await supabase
     .from("blog_posts")
-    .select(`
+    .select(
+      `
       *,
       profiles:author_id (
         full_name,
         avatar_url
       )
-    `)
+    `,
+    )
     .eq("slug", slug)
     .eq("status", "published")
-    .single()
+    .single();
 
   if (error || !post) {
-    return null
+    return null;
   }
 
-  return post
+  return post;
 }
 
 async function getRelatedPosts(currentSlug: string, category: string) {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await getSupabaseServerClient();
 
   const { data: posts } = await supabase
     .from("blog_posts")
@@ -46,18 +48,19 @@ async function getRelatedPosts(currentSlug: string, category: string) {
     .eq("category", category)
     .neq("slug", currentSlug)
     .order("created_at", { ascending: false })
-    .limit(3)
+    .limit(3);
 
-  return posts || []
+  return posts || [];
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps) {
-  const post = await getBlogPost(params.slug)
+  const { slug } = await params;
+  const post = await getBlogPost(slug);
 
   if (!post) {
     return {
-      title: "Post Not Found | KMCI Blog"
-    }
+      title: "Post Not Found | KMCI Blog",
+    };
   }
 
   return {
@@ -68,17 +71,18 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
       description: post.excerpt || post.title,
       images: post.featured_image ? [post.featured_image] : [],
     },
-  }
+  };
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = await getBlogPost(params.slug)
+  const { slug } = await params;
+  const post = await getBlogPost(slug);
 
   if (!post) {
-    notFound()
+    notFound();
   }
 
-  const relatedPosts = await getRelatedPosts(params.slug, post.category)
+  const relatedPosts = await getRelatedPosts(slug, post.category);
 
   return (
     <>
@@ -125,9 +129,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 <div className="flex items-center gap-6 text-dark-blue/60">
                   <div className="flex items-center gap-2">
                     <User className="h-4 w-4" />
-                    <span>
-                      {post.profiles?.full_name || "KMCI Team"}
-                    </span>
+                    <span>{post.profiles?.full_name || "KMCI Team"}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
@@ -157,7 +159,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               {/* Share Section */}
               <div className="mt-12 pt-8 border-t border-gold/20">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-dark-blue">Share this post</h3>
+                  <h3 className="text-lg font-semibold text-dark-blue">
+                    Share this post
+                  </h3>
                   <Button
                     variant="outline"
                     size="sm"
@@ -167,9 +171,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                           title: post.title,
                           text: post.excerpt || post.title,
                           url: window.location.href,
-                        })
+                        });
                       } else {
-                        navigator.clipboard.writeText(window.location.href)
+                        navigator.clipboard.writeText(window.location.href);
                       }
                     }}
                   >
@@ -245,7 +249,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                             </p>
                           )}
                           <div className="mt-4 text-sm text-dark-blue/50">
-                            {new Date(relatedPost.created_at).toLocaleDateString("en-US", {
+                            {new Date(
+                              relatedPost.created_at,
+                            ).toLocaleDateString("en-US", {
                               year: "numeric",
                               month: "short",
                               day: "numeric",
@@ -259,9 +265,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
                 <div className="text-center mt-12">
                   <Button asChild variant="outline">
-                    <Link href="/blog">
-                      View All Posts
-                    </Link>
+                    <Link href="/blog">View All Posts</Link>
                   </Button>
                 </div>
               </div>
@@ -271,5 +275,5 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </main>
       <SiteFooter />
     </>
-  )
+  );
 }
