@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { getSupabaseBrowserClient } from "@/lib/supabase/client"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { useState, useEffect } from "react";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -13,31 +13,65 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Switch } from "@/components/ui/switch"
-import { toast } from "sonner"
+} from "@/components/ui/dialog";
+import { Switch } from "@/components/ui/switch";
+import { toast } from "sonner";
+import { ImageUpload } from "@/components/ui/image-upload";
 
-interface SermonDialogProps {
-  sermon?: any
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onSave: () => void
+interface SermonFormData {
+  title: string;
+  slug: string;
+  speaker: string;
+  description: string;
+  sermon_date: string;
+  video_url: string;
+  audio_url: string;
+  thumbnail_url: string;
+  scripture_reference: string;
+  is_featured: boolean;
+  image_uploads: string[];
 }
 
-export function SermonDialog({ sermon, open, onOpenChange, onSave }: SermonDialogProps) {
-  const [isLoading, setIsLoading] = useState(false)
-  const [formData, setFormData] = useState({
+interface SermonDialogProps {
+  sermon?: {
+    id: string;
+    title: string;
+    slug: string;
+    speaker: string;
+    description: string;
+    sermon_date: string;
+    video_url: string;
+    audio_url: string;
+    thumbnail_url: string;
+    scripture_reference: string;
+    is_featured: boolean;
+    image_uploads?: string[];
+  };
+  open: boolean;
+  onOpenChangeAction: (open: boolean) => void;
+  onSaveAction: () => void;
+}
+
+export function SermonDialog({
+  sermon,
+  open,
+  onOpenChangeAction,
+  onSaveAction,
+}: SermonDialogProps) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState<SermonFormData>({
     title: "",
     slug: "",
     speaker: "",
     description: "",
-    sermon_date: "",
+    sermon_date: new Date().toISOString().split("T")[0],
     video_url: "",
     audio_url: "",
     thumbnail_url: "",
     scripture_reference: "",
     is_featured: false,
-  })
+    image_uploads: [],
+  });
 
   useEffect(() => {
     if (sermon) {
@@ -52,76 +86,99 @@ export function SermonDialog({ sermon, open, onOpenChange, onSave }: SermonDialo
         thumbnail_url: sermon.thumbnail_url || "",
         scripture_reference: sermon.scripture_reference || "",
         is_featured: sermon.is_featured || false,
-      })
+        image_uploads: sermon.image_uploads || [],
+      });
     } else {
       setFormData({
         title: "",
         slug: "",
         speaker: "",
         description: "",
-        sermon_date: new Date().toISOString().split('T')[0],
+        sermon_date: new Date().toISOString().split("T")[0],
         video_url: "",
         audio_url: "",
         thumbnail_url: "",
         scripture_reference: "",
         is_featured: false,
-      })
+        image_uploads: [],
+      });
     }
-  }, [sermon])
+  }, [sermon]);
 
   const generateSlug = (title: string) => {
     return title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "")
-  }
+      .replace(/(^-|-$)/g, "");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+    e.preventDefault();
+    setIsLoading(true);
 
     try {
-      const supabase = getSupabaseBrowserClient()
-      const { data: { user } } = await supabase.auth.getUser()
+      const supabase = getSupabaseBrowserClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-      if (!user) throw new Error("Not authenticated")
+      if (!user) throw new Error("Not authenticated");
 
       const payload = {
         ...formData,
         created_by: user.id,
-      }
+      };
 
       if (sermon) {
         const { error } = await supabase
           .from("sermons")
           .update(payload)
-          .eq("id", sermon.id)
+          .eq("id", sermon.id);
 
-        if (error) throw error
-        toast.success("Sermon updated successfully")
+        if (error) throw error;
+        toast.success("Sermon updated successfully");
       } else {
-        const { error } = await supabase.from("sermons").insert(payload)
+        const { error } = await supabase.from("sermons").insert(payload);
 
-        if (error) throw error
-        toast.success("Sermon created successfully")
+        if (error) throw error;
+        toast.success("Sermon created successfully");
       }
 
-      onSave()
+      onSaveAction();
     } catch (error: any) {
-      console.error("Save error:", error)
-      toast.error(error.message || "Failed to save sermon")
+      console.error("Save error:", error);
+      toast.error(error.message || "Failed to save sermon");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
+
+  const handleImageUpload = (url: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      image_uploads: [...prev.image_uploads, url],
+      thumbnail_url: prev.thumbnail_url || url, // Set first image as thumbnail
+    }));
+  };
+
+  const handleImageRemove = (url: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      image_uploads: prev.image_uploads.filter((img) => img !== url),
+    }));
+  };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+    <Dialog open={open} onOpenChange={onOpenChangeAction}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{sermon ? "Edit Sermon" : "Add New Sermon"}</DialogTitle>
+          <DialogTitle>
+            {sermon ? "Edit Sermon" : "Create New Sermon"}
+          </DialogTitle>
           <DialogDescription>
-            Fill in the details below to {sermon ? "update" : "add"} a sermon
+            {sermon
+              ? "Update sermon details"
+              : "Add a new sermon to your collection"}
           </DialogDescription>
         </DialogHeader>
 
@@ -132,11 +189,13 @@ export function SermonDialog({ sermon, open, onOpenChange, onSave }: SermonDialo
               <Input
                 id="title"
                 value={formData.title}
-                onChange={(e) => setFormData({ 
-                  ...formData, 
-                  title: e.target.value,
-                  slug: generateSlug(e.target.value)
-                })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    title: e.target.value,
+                    slug: generateSlug(e.target.value),
+                  })
+                }
                 required
               />
             </div>
@@ -146,20 +205,33 @@ export function SermonDialog({ sermon, open, onOpenChange, onSave }: SermonDialo
               <Input
                 id="speaker"
                 value={formData.speaker}
-                onChange={(e) => setFormData({ ...formData, speaker: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, speaker: e.target.value })
+                }
                 required
               />
             </div>
           </div>
 
+          <div className="space-y-2">
+            <Label>Upload Images</Label>
+            <ImageUpload
+              value={formData.thumbnail_url}
+              onChange={handleImageUpload}
+              label="Sermon Thumbnail"
+            />
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="date">Sermon Date</Label>
+              <Label htmlFor="date">Date</Label>
               <Input
                 id="date"
                 type="date"
                 value={formData.sermon_date}
-                onChange={(e) => setFormData({ ...formData, sermon_date: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, sermon_date: e.target.value })
+                }
                 required
               />
             </div>
@@ -169,7 +241,12 @@ export function SermonDialog({ sermon, open, onOpenChange, onSave }: SermonDialo
               <Input
                 id="scripture"
                 value={formData.scripture_reference}
-                onChange={(e) => setFormData({ ...formData, scripture_reference: e.target.value })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    scripture_reference: e.target.value,
+                  })
+                }
                 placeholder="e.g., John 3:16-18"
               />
             </div>
@@ -180,7 +257,9 @@ export function SermonDialog({ sermon, open, onOpenChange, onSave }: SermonDialo
             <Textarea
               id="description"
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
               rows={3}
             />
           </div>
@@ -190,7 +269,9 @@ export function SermonDialog({ sermon, open, onOpenChange, onSave }: SermonDialo
             <Input
               id="video"
               value={formData.video_url}
-              onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, video_url: e.target.value })
+              }
               placeholder="https://youtube.com/..."
             />
           </div>
@@ -200,7 +281,9 @@ export function SermonDialog({ sermon, open, onOpenChange, onSave }: SermonDialo
             <Input
               id="audio"
               value={formData.audio_url}
-              onChange={(e) => setFormData({ ...formData, audio_url: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, audio_url: e.target.value })
+              }
               placeholder="https://..."
             />
           </div>
@@ -210,7 +293,9 @@ export function SermonDialog({ sermon, open, onOpenChange, onSave }: SermonDialo
             <Input
               id="thumbnail"
               value={formData.thumbnail_url}
-              onChange={(e) => setFormData({ ...formData, thumbnail_url: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, thumbnail_url: e.target.value })
+              }
               placeholder="https://..."
             />
           </div>
@@ -227,7 +312,11 @@ export function SermonDialog({ sermon, open, onOpenChange, onSave }: SermonDialo
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChangeAction(false)}
+            >
               Cancel
             </Button>
             <Button type="submit" disabled={isLoading}>
@@ -237,8 +326,5 @@ export function SermonDialog({ sermon, open, onOpenChange, onSave }: SermonDialo
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
-
-
-

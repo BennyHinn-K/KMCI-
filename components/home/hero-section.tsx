@@ -1,32 +1,32 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 export function HeroSection() {
-  const titleRef = useRef<HTMLHeadingElement>(null)
+  const titleRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     // Sequential letter reveal animation
-    const title = titleRef.current
-    if (!title) return
+    const title = titleRef.current;
+    if (!title) return;
 
-    const text = title.textContent || ""
-    title.textContent = ""
-    title.style.opacity = "1"
+    const text = title.textContent || "";
+    title.textContent = "";
+    title.style.opacity = "1";
 
-    const letters = text.split("")
+    const letters = text.split("");
     letters.forEach((letter, index) => {
-      const span = document.createElement("span")
-      span.textContent = letter
-      span.style.opacity = "0"
-      span.style.display = "inline-block"
-      span.style.animation = `fade-in 0.5s ease-out ${index * 0.05}s forwards`
-      title.appendChild(span)
-    })
-  }, [])
+      const span = document.createElement("span");
+      span.textContent = letter;
+      span.style.opacity = "0";
+      span.style.display = "inline-block";
+      span.style.animation = `fade-in 0.5s ease-out ${index * 0.05}s forwards`;
+      title.appendChild(span);
+    });
+  }, []);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -47,21 +47,37 @@ export function HeroSection() {
           {/* Main Heading with letter reveal */}
           <h1
             ref={titleRef}
-            className="font-serif font-bold text-5xl md:text-6xl lg:text-7xl text-primary-foreground leading-tight opacity-0"
+            className="font-serif font-bold text-5xl md:text-6xl lg:text-7xl text-primary-foreground leading-tight opacity-0 text-center"
           >
-            A Centre of Transformation, Mission, and Hope
+            <div className="flex flex-col items-center">
+              <div>A</div>
+              <div>Centre</div>
+              <div>of</div>
+              <div>Transformation,</div>
+              <div>Mission,</div>
+              <div>and</div>
+              <div>Hope</div>
+            </div>
           </h1>
 
           {/* Rotating verbs */}
           <div className="flex items-center justify-center gap-2 text-xl md:text-2xl text-primary-foreground/90">
             <span>We</span>
-            <span className="font-semibold text-accent animate-pulse">Disciple</span>
+            <span className="font-semibold text-accent animate-pulse">
+              Disciple
+            </span>
             <span>•</span>
-            <span className="font-semibold text-accent animate-pulse" style={{ animationDelay: "0.5s" }}>
+            <span
+              className="font-semibold text-accent animate-pulse"
+              style={{ animationDelay: "0.5s" }}
+            >
               Empower
             </span>
             <span>•</span>
-            <span className="font-semibold text-accent animate-pulse" style={{ animationDelay: "1s" }}>
+            <span
+              className="font-semibold text-accent animate-pulse"
+              style={{ animationDelay: "1s" }}
+            >
               Transform
             </span>
           </div>
@@ -71,8 +87,9 @@ export function HeroSection() {
             className="text-lg md:text-xl text-primary-foreground/80 max-w-2xl mx-auto leading-relaxed animate-fade-in-up"
             style={{ animationDelay: "0.5s" }}
           >
-            Kingdom Missions Center International is dedicated to discipling communities and transforming lives for
-            Christ's service through ministry, missions, and development.
+            Kingdom Missions Center International is dedicated to discipling
+            communities and transforming lives for Christ's service through
+            ministry, missions, and development.
           </p>
 
           {/* CTA Buttons */}
@@ -80,7 +97,11 @@ export function HeroSection() {
             className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up"
             style={{ animationDelay: "0.8s" }}
           >
-            <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 group">
+            <Button
+              asChild
+              size="lg"
+              className="bg-accent text-accent-foreground hover:bg-accent/90 group"
+            >
               <Link href="/about">
                 Learn More
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -105,5 +126,5 @@ export function HeroSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

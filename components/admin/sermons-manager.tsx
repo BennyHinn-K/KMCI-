@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -10,26 +10,29 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { Plus, Search, Edit, Trash2, Play } from "lucide-react"
-import { format } from "date-fns"
-import { SermonDialog } from "./sermon-dialog"
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Plus, Search, Edit, Trash2, Play } from "lucide-react";
+import { format } from "date-fns";
+import { SermonDialog } from "./sermon-dialog";
 
 interface SermonsManagerProps {
-  sermons: any[]
+  sermons: any[];
 }
 
-export function SermonsManager({ sermons: initialSermons }: SermonsManagerProps) {
-  const [sermons, setSermons] = useState(initialSermons)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [editingSermon, setEditingSermon] = useState<any>(null)
+export function SermonsManager({
+  sermons: initialSermons,
+}: SermonsManagerProps) {
+  const [sermons, setSermons] = useState(initialSermons);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingSermon, setEditingSermon] = useState<any>(null);
 
-  const filteredSermons = sermons.filter((sermon) =>
-    sermon.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    sermon.speaker?.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredSermons = sermons.filter(
+    (sermon) =>
+      sermon.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      sermon.speaker?.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
   return (
     <div className="space-y-4">
@@ -43,7 +46,12 @@ export function SermonsManager({ sermons: initialSermons }: SermonsManagerProps)
             className="pl-10"
           />
         </div>
-        <Button onClick={() => { setEditingSermon(null); setIsDialogOpen(true) }}>
+        <Button
+          onClick={() => {
+            setEditingSermon(null);
+            setIsDialogOpen(true);
+          }}
+        >
           <Plus className="mr-2 h-4 w-4" />
           Add Sermon
         </Button>
@@ -65,7 +73,10 @@ export function SermonsManager({ sermons: initialSermons }: SermonsManagerProps)
           <TableBody>
             {filteredSermons.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center text-muted-foreground">
+                <TableCell
+                  colSpan={7}
+                  className="text-center text-muted-foreground"
+                >
                   No sermons found
                 </TableCell>
               </TableRow>
@@ -74,11 +85,15 @@ export function SermonsManager({ sermons: initialSermons }: SermonsManagerProps)
                 <TableRow key={sermon.id}>
                   <TableCell className="font-medium">{sermon.title}</TableCell>
                   <TableCell>{sermon.speaker}</TableCell>
-                  <TableCell>{format(new Date(sermon.sermon_date), "MMM dd, yyyy")}</TableCell>
+                  <TableCell>
+                    {format(new Date(sermon.sermon_date), "MMM dd, yyyy")}
+                  </TableCell>
                   <TableCell>{sermon.scripture_reference || "—"}</TableCell>
                   <TableCell>{sermon.views}</TableCell>
                   <TableCell>
-                    <Badge variant={sermon.is_featured ? "default" : "secondary"}>
+                    <Badge
+                      variant={sermon.is_featured ? "default" : "secondary"}
+                    >
                       {sermon.is_featured ? "Featured" : "Regular"}
                     </Badge>
                   </TableCell>
@@ -87,7 +102,10 @@ export function SermonsManager({ sermons: initialSermons }: SermonsManagerProps)
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => { setEditingSermon(sermon); setIsDialogOpen(true) }}
+                        onClick={() => {
+                          setEditingSermon(sermon);
+                          setIsDialogOpen(true);
+                        }}
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -106,15 +124,12 @@ export function SermonsManager({ sermons: initialSermons }: SermonsManagerProps)
       <SermonDialog
         sermon={editingSermon}
         open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        onSave={() => {
-          setIsDialogOpen(false)
-          window.location.reload()
+        onOpenChangeAction={setIsDialogOpen}
+        onSaveAction={() => {
+          setIsDialogOpen(false);
+          window.location.reload();
         }}
       />
     </div>
-  )
+  );
 }
-
-
-

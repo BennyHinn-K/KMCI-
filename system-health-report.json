@@ -1,0 +1,391 @@
+{
+  "timestamp": "2025-12-03T08:53:19.862Z",
+  "duration": "17.51s",
+  "score": 89,
+  "summary": {
+    "passed": 48,
+    "failed": 4,
+    "warnings": 2,
+    "total": 54
+  },
+  "details": [
+    {
+      "test": "Directory Structure",
+      "status": "PASS",
+      "message": "app directory exists",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.358Z"
+    },
+    {
+      "test": "Directory Structure",
+      "status": "PASS",
+      "message": "components directory exists",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.358Z"
+    },
+    {
+      "test": "Directory Structure",
+      "status": "PASS",
+      "message": "lib directory exists",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.359Z"
+    },
+    {
+      "test": "Directory Structure",
+      "status": "PASS",
+      "message": "providers directory exists",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.360Z"
+    },
+    {
+      "test": "Directory Structure",
+      "status": "PASS",
+      "message": "hooks directory exists",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.361Z"
+    },
+    {
+      "test": "File Structure",
+      "status": "PASS",
+      "message": "package.json exists",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.362Z"
+    },
+    {
+      "test": "File Structure",
+      "status": "PASS",
+      "message": "tsconfig.json exists",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.363Z"
+    },
+    {
+      "test": "File Structure",
+      "status": "PASS",
+      "message": "next.config.mjs exists",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.364Z"
+    },
+    {
+      "test": "File Structure",
+      "status": "PASS",
+      "message": "app/layout.tsx exists",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.365Z"
+    },
+    {
+      "test": "File Structure",
+      "status": "PASS",
+      "message": "lib/supabase/client.ts exists",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.365Z"
+    },
+    {
+      "test": "File Structure",
+      "status": "PASS",
+      "message": "components/admin/sermon-dialog.tsx exists",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.366Z"
+    },
+    {
+      "test": "File Structure",
+      "status": "PASS",
+      "message": "components/admin/image-upload.tsx exists",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.366Z"
+    },
+    {
+      "test": "Package Scripts",
+      "status": "PASS",
+      "message": "build script defined",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.368Z"
+    },
+    {
+      "test": "Package Scripts",
+      "status": "PASS",
+      "message": "dev script defined",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.368Z"
+    },
+    {
+      "test": "Package Scripts",
+      "status": "PASS",
+      "message": "start script defined",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.368Z"
+    },
+    {
+      "test": "Package Scripts",
+      "status": "PASS",
+      "message": "lint script defined",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.368Z"
+    },
+    {
+      "test": "Dependencies",
+      "status": "PASS",
+      "message": "@supabase/supabase-js installed",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.369Z"
+    },
+    {
+      "test": "Dependencies",
+      "status": "PASS",
+      "message": "@supabase/ssr installed",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.369Z"
+    },
+    {
+      "test": "Dependencies",
+      "status": "PASS",
+      "message": "@tanstack/react-query installed",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.369Z"
+    },
+    {
+      "test": "Dependencies",
+      "status": "PASS",
+      "message": "next installed",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.369Z"
+    },
+    {
+      "test": "Dependencies",
+      "status": "PASS",
+      "message": "react installed",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.369Z"
+    },
+    {
+      "test": "Dependencies",
+      "status": "PASS",
+      "message": "lucide-react installed",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.369Z"
+    },
+    {
+      "test": "Dependencies",
+      "status": "PASS",
+      "message": "sonner installed",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.369Z"
+    },
+    {
+      "test": "Node Version",
+      "status": "PASS",
+      "message": "Node.js requirement specified: >=18.0.0",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.370Z"
+    },
+    {
+      "test": "Environment Files",
+      "status": "PASS",
+      "message": ".env.local exists",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.370Z"
+    },
+    {
+      "test": "Environment Variables",
+      "status": "FAIL",
+      "message": "NEXT_PUBLIC_SUPABASE_URL not set",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.371Z"
+    },
+    {
+      "test": "Environment Variables",
+      "status": "FAIL",
+      "message": "NEXT_PUBLIC_SUPABASE_ANON_KEY not set",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.371Z"
+    },
+    {
+      "test": "Environment Variables",
+      "status": "FAIL",
+      "message": "SUPABASE_SERVICE_ROLE_KEY not set",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.371Z"
+    },
+    {
+      "test": "TypeScript Config",
+      "status": "PASS",
+      "message": "strict correctly set",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.372Z"
+    },
+    {
+      "test": "TypeScript Config",
+      "status": "PASS",
+      "message": "esModuleInterop correctly set",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.372Z"
+    },
+    {
+      "test": "TypeScript Config",
+      "status": "PASS",
+      "message": "skipLibCheck correctly set",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.372Z"
+    },
+    {
+      "test": "TypeScript Config",
+      "status": "PASS",
+      "message": "jsx correctly set",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.372Z"
+    },
+    {
+      "test": "TypeScript Config",
+      "status": "PASS",
+      "message": "Path mapping configured for @/*",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.372Z"
+    },
+    {
+      "test": "Next.js Config",
+      "status": "PASS",
+      "message": "Image configuration found",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.373Z"
+    },
+    {
+      "test": "Next.js Config",
+      "status": "PASS",
+      "message": "ESLint configuration found",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.373Z"
+    },
+    {
+      "test": "Next.js Config",
+      "status": "PASS",
+      "message": "TypeScript configuration found",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.374Z"
+    },
+    {
+      "test": "Next.js Config",
+      "status": "PASS",
+      "message": "next.config.mjs exists and readable",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.374Z"
+    },
+    {
+      "test": "Next.js Structure",
+      "status": "PASS",
+      "message": "app directory exists",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.374Z"
+    },
+    {
+      "test": "Next.js Structure",
+      "status": "PASS",
+      "message": "app/admin directory exists",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.374Z"
+    },
+    {
+      "test": "Next.js Structure",
+      "status": "PASS",
+      "message": "app/api directory exists",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.375Z"
+    },
+    {
+      "test": "Supabase Connection",
+      "status": "FAIL",
+      "message": "Supabase credentials missing",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.662Z"
+    },
+    {
+      "test": "Database Schema",
+      "status": "WARN",
+      "message": "Service role key not available for schema check",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.662Z"
+    },
+    {
+      "test": "Component Structure",
+      "status": "PASS",
+      "message": "components/admin/sermon-dialog.tsx has exports",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.664Z"
+    },
+    {
+      "test": "Component Structure",
+      "status": "PASS",
+      "message": "components/admin/image-upload.tsx has exports",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.665Z"
+    },
+    {
+      "test": "Component Structure",
+      "status": "PASS",
+      "message": "image-upload.tsx has Supabase integration",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.666Z"
+    },
+    {
+      "test": "Component Structure",
+      "status": "PASS",
+      "message": "components/ui/sonner.tsx has exports",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.667Z"
+    },
+    {
+      "test": "Component Structure",
+      "status": "PASS",
+      "message": "app/layout.tsx has exports",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.668Z"
+    },
+    {
+      "test": "Component Structure",
+      "status": "PASS",
+      "message": "lib/supabase/client.ts has exports",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:02.668Z"
+    },
+    {
+      "test": "Build Process",
+      "status": "PASS",
+      "message": "TypeScript compilation successful",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:11.100Z"
+    },
+    {
+      "test": "Build Process",
+      "status": "WARN",
+      "message": "Linting issues found",
+      "details": "Command failed: npm run lint\nConverting circular structure to JSON\n    --> starting at object with constructor 'Object'\n    |     property 'configs' -> object with constructor 'Object'\n    |     prope",
+      "timestamp": "2025-12-03T08:53:19.856Z"
+    },
+    {
+      "test": "Security",
+      "status": "PASS",
+      "message": ".env.local uses local development URLs",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:19.857Z"
+    },
+    {
+      "test": "Security",
+      "status": "PASS",
+      "message": ".env files properly ignored in git",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:19.858Z"
+    },
+    {
+      "test": "Performance",
+      "status": "PASS",
+      "message": "Image optimization configured",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:19.859Z"
+    },
+    {
+      "test": "Performance",
+      "status": "PASS",
+      "message": "React Query caching configured",
+      "details": null,
+      "timestamp": "2025-12-03T08:53:19.860Z"
+    }
+  ]
+}
