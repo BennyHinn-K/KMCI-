@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { db } from "../database/connection";
 import { logger, authLogger } from "../logger";
-import { verify, sign } from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 
@@ -108,7 +108,7 @@ export function generateToken(payload: {
   email: string;
 }): string {
   try {
-    return sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+    return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
   } catch (error) {
     throw new AuthenticationError(
       "Failed to generate token",
@@ -120,7 +120,7 @@ export function generateToken(payload: {
 // Verify JWT token
 export function verifyToken(token: string): { userId: string; email: string } {
   try {
-    return verify(token, JWT_SECRET) as { userId: string; email: string };
+    return jwt.verify(token, JWT_SECRET) as { userId: string; email: string };
   } catch (error) {
     throw new AuthenticationError("Invalid or expired token", "INVALID_TOKEN");
   }
