@@ -15,11 +15,5 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
   "installCommand": "npm ci",
-  "devCommand": "npm run dev",
-  "crons": [
-    {
-      "path": "/api/health-check",
-      "schedule": "*/5 * * * *"
-    }
-  ]
+  "devCommand": "npm run dev"
 }
