@@ -50,13 +50,8 @@ export function HeroSection() {
             className="font-serif font-bold text-5xl md:text-6xl lg:text-7xl text-primary-foreground leading-tight opacity-0 text-center"
           >
             <div className="flex flex-col items-center">
-              <div>A</div>
-              <div>Centre</div>
-              <div>of</div>
-              <div>Transformation,</div>
-              <div>Mission,</div>
-              <div>and</div>
-              <div>Hope</div>
+              <div>A Centre of</div>
+              <div>Transformation, Mission, and Hope</div>
             </div>
           </h1>
 
