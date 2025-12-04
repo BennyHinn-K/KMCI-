@@ -5,8 +5,16 @@ import { verify, sign } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 
-const JWT_SECRET = process.env.JWT_SECRET || "your-super-secret-jwt-key";
+const JWT_SECRET =
+  process.env.JWT_SECRET ||
+  "your-super-secret-jwt-key-with-minimum-32-characters";
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "24h";
+
+if (!process.env.JWT_SECRET) {
+  console.warn(
+    "JWT_SECRET not set, using default development key. This is not secure for production!",
+  );
+}
 
 export interface User {
   id: string;
@@ -99,7 +107,14 @@ export function generateToken(payload: {
   userId: string;
   email: string;
 }): string {
-  return sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  try {
+    return sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  } catch (error) {
+    throw new AuthenticationError(
+      "Failed to generate token",
+      "TOKEN_GENERATION_ERROR",
+    );
+  }
 }
 
 // Verify JWT token
